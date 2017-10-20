@@ -20,7 +20,7 @@ public class BugMovementScript : MonoBehaviour {
 
         ourBug.AddRelativeForce(Vector3.up * upForce);
         ourBug.rotation = Quaternion.Euler(
-                new Vector3(tiltAmountForward, ourBug.rotation.y, ourBug.rotation.z)
+                new Vector3(tiltAmountForward, currentYRotation, ourBug.rotation.z)
             );
     }
 
@@ -28,31 +28,41 @@ public class BugMovementScript : MonoBehaviour {
 
     void MovementUpDown()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.W))
         {
-            upForce = 450;
+            upForce = 50.0f;
         }
         //else if (Input.GetKey(KeyCode.DownArrow))
         //{
         //    upForce = -200;
         //}
-        else if(!Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
+        else //if(!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.DownArrow))
         {
             //It was positive in the tutorial but I want it to fall when no button is being pressed
-            upForce = -98.1f;
+            //upForce = -98.1f;
+            upForce = -20f;
         }
     }
-
-    private float movementForwardSpeed = 500.0f;
+    [SerializeField]
+    private float movementForwardSpeed = 200.0f;
     private float tiltAmountForward = 0;
     private float tiltVelocityForward; //Unecessary
 
     void MovementForward()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.UpArrow))
         {
             ourBug.AddRelativeForce(Vector3.forward * movementForwardSpeed);
-            tiltAmountForward = Mathf.SmoothDamp(tiltAmountForward, 20 * Input.GetAxis("Vertical"), ref tiltVelocityForward, 0.1f);
+            tiltAmountForward = Mathf.SmoothDamp(tiltAmountForward, 20, ref tiltVelocityForward, 0.1f);
+        }
+        else if (Input.GetKey(KeyCode.DownArrow))
+        {
+            ourBug.AddRelativeForce(Vector3.forward * -movementForwardSpeed);
+            tiltAmountForward = Mathf.SmoothDamp(tiltAmountForward, -20, ref tiltVelocityForward, 0.1f);
+        }
+        else if(!Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
+        {
+            tiltAmountForward = Mathf.SmoothDamp(tiltAmountForward, 0, ref tiltVelocityForward, 0.1f);
         }
     }
 
@@ -62,6 +72,14 @@ public class BugMovementScript : MonoBehaviour {
     private float rotateYVelocity;
     void Rotation()
     {
-
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            wantedYRotation -= rotateAmountByKeys;
+        }
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            wantedYRotation += rotateAmountByKeys;
+        }
+        currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotateYVelocity, 0.25f);
     }
 }
