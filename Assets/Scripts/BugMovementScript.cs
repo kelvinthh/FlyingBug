@@ -39,7 +39,7 @@ public class BugMovementScript : MonoBehaviour {
         {
             upForce = -200.0f;
         }
-        else if(!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.DownArrow))
+        else if(!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
         {
             //It was positive in the tutorial but I want it to fall when no button is being pressed
             //upForce = -98.1f;
@@ -71,7 +71,7 @@ public class BugMovementScript : MonoBehaviour {
     }
 
     private float wantedYRotation;
-    private float currentYRotation;
+    public float currentYRotation;
     private float rotateAmountByKeys = 2.5f;
     private float rotateYVelocity;
 
