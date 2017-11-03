@@ -16,12 +16,12 @@ public class CameraFollowScript : MonoBehaviour {
     public float angle ;
     private void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) && ourBug.GetComponent<BugMovementScript>().stamina > 0)
         {
             verticalAxis = 1;
 
         }
-        else if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKey(KeyCode.S) && ourBug.GetComponent<BugMovementScript>().stamina > 0)
         {
             verticalAxis = -1;
         }
