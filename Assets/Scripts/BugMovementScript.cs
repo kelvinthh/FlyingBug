@@ -30,8 +30,6 @@ public class BugMovementScript : MonoBehaviour {
 	[SerializeField]
 	private float maxStamina = 5;
 
-
-
     void Awake()
     {
         ourBug = GetComponent<Rigidbody>();
@@ -39,7 +37,6 @@ public class BugMovementScript : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        
         MovementUpDown();
         MovementForward();
         Rotation();
@@ -118,9 +115,21 @@ public class BugMovementScript : MonoBehaviour {
 
     void LimitSpeed()
     {
-        if(Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-            if(stamina > 0)
+        if (stamina > 0)
+        {
+            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+            {
                 ourBug.velocity = Vector3.ClampMagnitude(ourBug.velocity, bugMaxSpeed);
+            }
+        }
+        else if(stamina <= 0)
+        {
+            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow))
+            {
+                    ourBug.velocity = new Vector3(0, ourBug.velocity.y, 0);
+
+            }
+        }
     }
 
     private float sideMovementAmount = 300.0f;
