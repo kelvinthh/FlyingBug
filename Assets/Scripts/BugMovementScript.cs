@@ -30,9 +30,19 @@ public class BugMovementScript : MonoBehaviour {
 	[SerializeField]
 	private float maxStamina = 5;
 
+    //Variables for Stamina Bar
+    Rect staminaRect;
+    Texture2D staminaTexture;
+
     void Awake()
     {
         ourBug = GetComponent<Rigidbody>();
+
+        //Display the Stamina Bar
+        staminaRect = new Rect(Screen.width / 10, Screen.height * 9 / 10, Screen.width / 3, Screen.height / 50);
+        staminaTexture = new Texture2D(1, 1);
+        staminaTexture.SetPixel(0, 0, Color.white);
+        staminaTexture.Apply();
     }
 
     private void FixedUpdate()
@@ -117,16 +127,31 @@ public class BugMovementScript : MonoBehaviour {
     {
         if (stamina > 0)
         {
-            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
             {
                 ourBug.velocity = Vector3.ClampMagnitude(ourBug.velocity, bugMaxSpeed);
             }
+
+            if (ourBug.velocity.z > bugMaxSpeed)
+            {
+                //ourBug.velocity.z = 10;
+                Vector3 tempVel = ourBug.velocity;
+                tempVel.z = bugMaxSpeed;
+                ourBug.velocity = tempVel;
+            }
+
         }
         else if(stamina <= 0)
         {
             if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow))
             {
-                    ourBug.velocity = new Vector3(0, ourBug.velocity.y, 0);
+                if (ourBug.velocity.z > bugMaxSpeed)
+                {
+                    //ourBug.velocity.z = 10;
+                    Vector3 tempVel = ourBug.velocity;
+                    tempVel.z = bugMaxSpeed;
+                    ourBug.velocity = tempVel;
+                }
 
             }
         }
@@ -166,4 +191,14 @@ public class BugMovementScript : MonoBehaviour {
             tiltAmountSideways = Mathf.SmoothDamp(tiltAmountSideways, 0, ref tiltAmountVelocity, 0.1f);
         }
     }
+
+    void OnGUI()
+    {
+        float ratio = stamina / maxStamina;
+        float rectWidth = ratio*Screen.width / 3;
+        staminaRect.width = rectWidth;
+        GUI.DrawTexture(staminaRect, staminaTexture);
+
+    }
+
 }

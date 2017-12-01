@@ -13,7 +13,7 @@ public class CameraFollowScript : MonoBehaviour {
     private int verticalAxis = 0;
     private Vector3 velocityCameraFollow;
     public Vector3 behindPosition = new Vector3(0,2,-4);
-    public float angle ;
+    public float angle;
     private void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.W) && ourBug.GetComponent<BugMovementScript>().stamina > 0)
