@@ -1,32 +1,29 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class BugMovementScript : MonoBehaviour
-{
+public class BugMovementScript_mine : MonoBehaviour {
 
     Rigidbody ourBug;
-
-    //Variables for Up/Down Movement
+	
+	//Variables for Up/Down Movement
     public float upForce;
-
-    //Variables for Rotation
-    private float wantedYRotation;
+	
+	//Variables for Rotation
+	private float wantedYRotation;
     public float currentYRotation;
     private float rotateAmountByKeys = 2.5f;
     private float rotateYVelocity;
-
-    //Variables for Limiting Speed
-    [SerializeField]
+	
+	//Variables for Limiting Speed
+	[SerializeField]
     private float bugMaxSpeed;
-
-    //Variables for Stamina
-    [SerializeField]
-    public float stamina = 5;
-    [SerializeField]
-    private float maxStamina = 5;
+	
+	//Variables for Stamina
+	[SerializeField]
+	public float stamina = 5;
+	[SerializeField]
+	private float maxStamina = 5;
 
     //Variables for Stamina Bar
     Rect staminaRect;
@@ -59,27 +56,18 @@ public class BugMovementScript : MonoBehaviour
         Rotation();
         LimitSpeed();
         Swerve();
-        Fail();
 
         ourBug.AddRelativeForce(Vector3.up * upForce);
         ourBug.rotation = Quaternion.Euler(new Vector3(tiltAmountForward, currentYRotation, tiltAmountSideways));
 
         if (stamina <= 0)
         {
-            upForce = -850.0f;
+            upForce = -98.1f;
             stamina = 0;
         }
-        if (stamina < maxStamina && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+        if(stamina<maxStamina && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
         {
             stamina += Time.deltaTime;
-        }
-    }
-
-    void Fail()
-    {
-        if(ourBug.position.y  <= -30)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
@@ -103,10 +91,9 @@ public class BugMovementScript : MonoBehaviour
         {
             //It was positive in the tutorial but I want it to fall when no button is being pressed
             //upForce = -98.1f;
-            if(stamina > 0)
-                upForce = -250.0f;
+            upForce = -98.1f;
         }
-
+        
     }
     //Varibles for Forward/Backward Movment
     private float movementForwardSpeed = 500.0f;
@@ -124,7 +111,7 @@ public class BugMovementScript : MonoBehaviour
             ourBug.AddRelativeForce(Vector3.forward * -movementForwardSpeed);
             tiltAmountForward = Mathf.SmoothDamp(tiltAmountForward, -20, ref tiltVelocityForward, 0.1f);
         }
-        else if (!Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
+        else if(!Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
         {
             tiltAmountForward = Mathf.SmoothDamp(tiltAmountForward, 0, ref tiltVelocityForward, 0.1f);
         }
@@ -149,7 +136,7 @@ public class BugMovementScript : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
             {
-                //ourBug.velocity = Vector3.ClampMagnitude(ourBug.velocity, bugMaxSpeed);
+                ourBug.velocity = Vector3.ClampMagnitude(ourBug.velocity, bugMaxSpeed);
             }
 
             if (ourBug.velocity.z > bugMaxSpeed)
@@ -161,7 +148,7 @@ public class BugMovementScript : MonoBehaviour
             }
 
         }
-        else if (stamina <= 0)
+        else if(stamina <= 0)
         {
             if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow))
             {
@@ -184,7 +171,7 @@ public class BugMovementScript : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A))
         {
-            if (stamina > 0)
+            if(stamina > 0)
             {
                 ourBug.AddRelativeForce(Vector3.right * -sideMovementAmount);
                 tiltAmountSideways = Mathf.SmoothDamp(tiltAmountSideways, 20, ref tiltAmountVelocity, 0.1f);
@@ -199,7 +186,7 @@ public class BugMovementScript : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
         {
 
-            if (stamina > 0)
+            if(stamina > 0)
             {
                 ourBug.AddRelativeForce(Vector3.right * sideMovementAmount);
                 tiltAmountSideways = Mathf.SmoothDamp(tiltAmountSideways, -20, ref tiltAmountVelocity, 0.1f);

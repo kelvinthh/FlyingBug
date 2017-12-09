@@ -1,40 +1,46 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class BugMovementScript : MonoBehaviour
-{
+public class BugMovementScript_MariusMovementEdition : MonoBehaviour {
 
     Rigidbody ourBug;
-
-    //Variables for Up/Down Movement
+	
+	//Variables for Up/Down Movement
     public float upForce;
+	
+	//Varibles for Forward/Backward Movment
+    private float movementForwardSpeed = 500.0f;
+    private float tiltAmountForward = 0;
+    private float tiltVelocityForward; //Unecessary
 
     //Variables for Rotation
+    public float addedYRotation;
     private float wantedYRotation;
     public float currentYRotation;
-    private float rotateAmountByKeys = 2.5f;
+    private float rotateAmountByKeys = 20.5f;
     private float rotateYVelocity;
-
-    //Variables for Limiting Speed
-    [SerializeField]
+	
+	//Variables for Limiting Speed
+	[SerializeField]
     private float bugMaxSpeed;
-
-    //Variables for Stamina
-    [SerializeField]
-    public float stamina = 5;
-    [SerializeField]
-    private float maxStamina = 5;
+	
+	//Variables for Stamina
+	[SerializeField]
+	public float stamina = 5;
+	[SerializeField]
+	private float maxStamina = 5;
 
     //Variables for Stamina Bar
     Rect staminaRect;
     Texture2D staminaTexture;
 
+    private Transform m_transform;
+
     void Awake()
     {
         ourBug = GetComponent<Rigidbody>();
+        m_transform = transform;
 
         //Display the Stamina Bar
         staminaRect = new Rect(Screen.width / 10, Screen.height * 9 / 10, Screen.width / 3, Screen.height / 50);
@@ -54,33 +60,38 @@ public class BugMovementScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        MovementUpDown();
-        MovementForward();
-        Rotation();
-        LimitSpeed();
-        Swerve();
-        Fail();
 
-        ourBug.AddRelativeForce(Vector3.up * upForce);
-        ourBug.rotation = Quaternion.Euler(new Vector3(tiltAmountForward, currentYRotation, tiltAmountSideways));
+        Vector3 forward = Input.GetAxis("VerticalKey") * movementForwardSpeed * m_transform.forward;
+        Vector3 upward = Input.GetAxis("Vertical") * upForce * Vector3.up;
+        Vector3 movementVector = forward + upward;
 
-        if (stamina <= 0)
-        {
-            upForce = -850.0f;
-            stamina = 0;
-        }
-        if (stamina < maxStamina && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-        {
-            stamina += Time.deltaTime;
-        }
-    }
+        ourBug.AddForce(movementVector);
 
-    void Fail()
-    {
-        if(ourBug.position.y  <= -30)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
+
+        addedYRotation = rotateAmountByKeys * Input.GetAxis("HorizontalKey");
+        //Vector3 rotationVector = m_transform.rotation.eulerAngles;
+        //rotationVector.y += addedYRotation;
+        ourBug.AddTorque(new Vector3(0, addedYRotation, 0));
+        
+
+        //MovementUpDown();
+        //MovementForward();
+        //Rotation();
+        //LimitSpeed();
+        //Swerve();
+
+        //ourBug.AddRelativeForce(Vector3.up * upForce);
+        //ourBug.rotation = Quaternion.Euler(new Vector3(tiltAmountForward, currentYRotation, tiltAmountSideways));
+
+        //if (stamina <= 0)
+        //{
+        //    upForce = -98.1f;
+        //    stamina = 0;
+        //}
+        //if(stamina<maxStamina && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+        //{
+        //    stamina += Time.deltaTime;
+        //}
     }
 
     void MovementUpDown()
@@ -103,43 +114,40 @@ public class BugMovementScript : MonoBehaviour
         {
             //It was positive in the tutorial but I want it to fall when no button is being pressed
             //upForce = -98.1f;
-            if(stamina > 0)
-                upForce = -250.0f;
+            upForce = -98.1f;
         }
-
+        
     }
-    //Varibles for Forward/Backward Movment
-    private float movementForwardSpeed = 500.0f;
-    private float tiltAmountForward = 0;
-    private float tiltVelocityForward; //Unecessary
+
     void MovementForward()
     {
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            ourBug.AddRelativeForce(Vector3.forward * movementForwardSpeed);
+            ourBug.AddRelativeForce(m_transform.forward * movementForwardSpeed);
             tiltAmountForward = Mathf.SmoothDamp(tiltAmountForward, 20, ref tiltVelocityForward, 0.1f);
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            ourBug.AddRelativeForce(Vector3.forward * -movementForwardSpeed);
+            ourBug.AddRelativeForce(m_transform.forward * -movementForwardSpeed);
             tiltAmountForward = Mathf.SmoothDamp(tiltAmountForward, -20, ref tiltVelocityForward, 0.1f);
         }
-        else if (!Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
+        else if(!Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
         {
-            tiltAmountForward = Mathf.SmoothDamp(tiltAmountForward, 0, ref tiltVelocityForward, 0.1f);
+            //tiltAmountForward = Mathf.SmoothDamp(tiltAmountForward, 0, ref tiltVelocityForward, 0.1f);
         }
     }
 
     void Rotation()
     {
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            wantedYRotation -= rotateAmountByKeys;
-        }
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            wantedYRotation += rotateAmountByKeys;
-        }
+        //if (Input.GetKey(KeyCode.LeftArrow))
+        //{
+        //    wantedYRotation -= rotateAmountByKeys;
+        //}
+        //if (Input.GetKey(KeyCode.RightArrow))
+        //{
+        //    wantedYRotation += rotateAmountByKeys;
+        //}
+        wantedYRotation = currentYRotation + rotateAmountByKeys * Input.GetAxis("HorizontalKey");
         currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotateYVelocity, 0.25f);
     }
 
@@ -149,7 +157,7 @@ public class BugMovementScript : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
             {
-                //ourBug.velocity = Vector3.ClampMagnitude(ourBug.velocity, bugMaxSpeed);
+                ourBug.velocity = Vector3.ClampMagnitude(ourBug.velocity, bugMaxSpeed);
             }
 
             if (ourBug.velocity.z > bugMaxSpeed)
@@ -161,7 +169,7 @@ public class BugMovementScript : MonoBehaviour
             }
 
         }
-        else if (stamina <= 0)
+        else if(stamina <= 0)
         {
             if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow))
             {
@@ -184,7 +192,7 @@ public class BugMovementScript : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A))
         {
-            if (stamina > 0)
+            if(stamina > 0)
             {
                 ourBug.AddRelativeForce(Vector3.right * -sideMovementAmount);
                 tiltAmountSideways = Mathf.SmoothDamp(tiltAmountSideways, 20, ref tiltAmountVelocity, 0.1f);
@@ -199,7 +207,7 @@ public class BugMovementScript : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
         {
 
-            if (stamina > 0)
+            if(stamina > 0)
             {
                 ourBug.AddRelativeForce(Vector3.right * sideMovementAmount);
                 tiltAmountSideways = Mathf.SmoothDamp(tiltAmountSideways, -20, ref tiltAmountVelocity, 0.1f);
