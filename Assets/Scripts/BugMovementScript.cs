@@ -66,7 +66,7 @@ public class BugMovementScript : MonoBehaviour
 
         if (stamina <= 0)
         {
-            upForce = -850.0f;
+            upForce = -1000f;
             stamina = 0;
         }
         if (stamina < maxStamina && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
