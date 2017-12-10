@@ -24,9 +24,9 @@ public class BugMovementScript : MonoBehaviour
 
     //Variables for Stamina
     [SerializeField]
-    public float stamina = 5;
+    public float stamina = 8;
     [SerializeField]
-    private float maxStamina = 5;
+    public float maxStamina = 8;
 
     //Variables for Stamina Bar
     Rect staminaRect;
@@ -69,10 +69,10 @@ public class BugMovementScript : MonoBehaviour
             upForce = -1000f;
             stamina = 0;
         }
-        if (stamina < maxStamina && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-        {
-            stamina += Time.deltaTime;
-        }
+        //if (stamina < maxStamina && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+        //{
+        //    stamina += Time.deltaTime;
+        //}
     }
 
     void Fail()
