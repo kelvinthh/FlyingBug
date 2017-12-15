@@ -58,7 +58,7 @@ public class RegeneratingPlatform : MonoBehaviour {
 
     void Regenerate()
     {
-        ourBug.GetComponent<BugMovementScript>().stamina += Time.deltaTime; //Time.deltaTime;
+        ourBug.GetComponent<BugMovementScript>().stamina += Time.deltaTime*5; //Time.deltaTime;
         if (ourBug.GetComponent<BugMovementScript>().stamina > ourBug.GetComponent<BugMovementScript>().maxStamina)
         {
             ourBug.GetComponent<BugMovementScript>().stamina = ourBug.GetComponent<BugMovementScript>().maxStamina;

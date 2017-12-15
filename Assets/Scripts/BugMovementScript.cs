@@ -150,7 +150,7 @@ public class BugMovementScript : MonoBehaviour
 
     }
     //Varibles for Forward/Backward Movment
-    private float movementForwardSpeed = 500.0f;
+    private float movementForwardSpeed = 600.0f;
     private float tiltAmountForward = 0;
     private float tiltVelocityForward; //Unecessary
     void MovementForward()
