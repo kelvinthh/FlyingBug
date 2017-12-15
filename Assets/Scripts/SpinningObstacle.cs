@@ -2,14 +2,8 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class MovingObstacle : MonoBehaviour
+public class SpinningObstacle : MonoBehaviour
 {
-    //Variables of the moving platform
-    public Transform destinationObejct;
-    private Vector3 startPos;
-    private Vector3 endPos;
-    [SerializeField]
-    private float movingTime = 5f;
 
     //Varibles for playing the fail sound once the player hit
     public AudioClip fail;
@@ -25,10 +19,19 @@ public class MovingObstacle : MonoBehaviour
     //Access the movement script
     private Transform ourBug;
 
+    //Spinning Axis
+    [SerializeField]
+    private float rotateX;
+    [SerializeField]
+    private float rotateY;
+    [SerializeField]
+    private float rotateZ;
+
     void Awake()
     {
         ourBug = GameObject.FindGameObjectWithTag("Player").transform;
         bgm = GameObject.FindGameObjectWithTag("BGM").GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -41,16 +44,11 @@ public class MovingObstacle : MonoBehaviour
         {
             Time.timeScale = 1f;
         }
-
-        startPos = transform.position;
-        endPos = destinationObejct.position;
-        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
     {
-        transform.position = Vector3.Lerp(startPos, endPos,
-        Mathf.SmoothStep(0f, 1f,Mathf.PingPong(Time.time / movingTime, 1f)));
+        transform.Rotate(new Vector3(rotateX, rotateY, rotateZ) * Time.deltaTime);
         if (slowmo)
             Time.timeScale = 0.5f;
 
