@@ -24,7 +24,6 @@ public class MovingObstacle : MonoBehaviour
 
     //Access the movement script
     private Transform ourBug;
-
     void Awake()
     {
         ourBug = GameObject.FindGameObjectWithTag("Player").transform;
@@ -33,6 +32,7 @@ public class MovingObstacle : MonoBehaviour
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         isPlayed = false;
         slowmo = false;
 
@@ -44,7 +44,6 @@ public class MovingObstacle : MonoBehaviour
 
         startPos = transform.position;
         endPos = destinationObejct.position;
-        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
