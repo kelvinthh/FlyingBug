@@ -30,7 +30,7 @@ public class BugMovementScript : MonoBehaviour
 
     //Variables for Stamina Bar
     Rect staminaRect;
-    Texture2D staminaTexture;
+    public Texture2D staminaTexture;
 
     void Awake()
     {
