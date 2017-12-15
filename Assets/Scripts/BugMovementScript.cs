@@ -32,6 +32,17 @@ public class BugMovementScript : MonoBehaviour
     Rect staminaRect;
     public Texture2D staminaTexture;
 
+    //Varibles for playing the fail sound once the player hit
+    public AudioClip fail;
+    AudioSource audioSource;
+
+    //AudioSource object of the fail sound
+    private AudioSource bgm;
+    private bool isPlayed;
+
+    //Boolean for enabling the slow-motion effect
+    private bool slowmo;
+
     void Awake()
     {
         ourBug = GetComponent<Rigidbody>();
@@ -41,6 +52,21 @@ public class BugMovementScript : MonoBehaviour
         staminaTexture = new Texture2D(1, 1);
         staminaTexture.SetPixel(0, 0, Color.white);
         staminaTexture.Apply();
+
+        bgm = GameObject.FindGameObjectWithTag("BGM").GetComponent<AudioSource>();
+    }
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+        isPlayed = false;
+        slowmo = false;
+
+        //Reset the slow-motion effect
+        if (Time.timeScale != 1f)
+        {
+            Time.timeScale = 1f;
+        }
     }
 
     void OnGUI()
@@ -73,14 +99,29 @@ public class BugMovementScript : MonoBehaviour
         //{
         //    stamina += Time.deltaTime;
         //}
+        if (slowmo)
+            Time.timeScale = 0.5f;
     }
 
     void Fail()
     {
         if(ourBug.position.y  <= -30)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            stamina = 0;
+            bgm.Stop();
+            if (!isPlayed)
+            {
+                audioSource.PlayOneShot(fail, 1f);
+                isPlayed = true;
+            }
+            slowmo = true;
+            Invoke("Restart", 1);
         }
+    }
+
+    void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     void MovementUpDown()
