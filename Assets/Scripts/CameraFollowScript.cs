@@ -14,6 +14,7 @@ public class CameraFollowScript : MonoBehaviour {
     private Vector3 velocityCameraFollow;
     public Vector3 behindPosition = new Vector3(0,2,-4);
     public float angle;
+    public float cameraPullSpeed;
     private void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.W) && ourBug.GetComponent<BugMovementScript>().stamina > 0)
@@ -29,7 +30,7 @@ public class CameraFollowScript : MonoBehaviour {
         {
             verticalAxis = 0;
         }
-        transform.position = Vector3.SmoothDamp(transform.position, ourBug.transform.TransformPoint(behindPosition) + Vector3.up * verticalAxis, ref velocityCameraFollow, 0.1f);
+        transform.position = Vector3.SmoothDamp(transform.position, ourBug.transform.TransformPoint(behindPosition) + Vector3.up * verticalAxis, ref velocityCameraFollow, cameraPullSpeed);
         transform.rotation = Quaternion.Euler(new Vector3(angle, ourBug.GetComponent<BugMovementScript>().currentYRotation, 0));
     }
 }
