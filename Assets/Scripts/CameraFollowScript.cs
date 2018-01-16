@@ -17,19 +17,19 @@ public class CameraFollowScript : MonoBehaviour {
     public float cameraPullSpeed;
     private void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.W) && ourBug.GetComponent<BugMovementScript>().stamina > 0)
-        {
-            verticalAxis = 1;
+        //if (Input.GetKey(KeyCode.W) && ourBug.GetComponent<BugMovementScript>().stamina > 0)
+        //{
+        //    verticalAxis = 1;
 
-        }
-        else if (Input.GetKey(KeyCode.S) && ourBug.GetComponent<BugMovementScript>().stamina > 0)
-        {
-            verticalAxis = -1;
-        }
-        else
-        {
-            verticalAxis = 0;
-        }
+        //}
+        //else if (Input.GetKey(KeyCode.S) && ourBug.GetComponent<BugMovementScript>().stamina > 0)
+        //{
+        //    verticalAxis = -1;
+        //}
+        //else
+        //{
+        //    verticalAxis = 0;
+        //}
         transform.position = Vector3.SmoothDamp(transform.position, ourBug.transform.TransformPoint(behindPosition) + Vector3.up * verticalAxis, ref velocityCameraFollow, cameraPullSpeed);
         transform.rotation = Quaternion.Euler(new Vector3(angle, ourBug.GetComponent<BugMovementScript>().currentYRotation, 0));
     }
