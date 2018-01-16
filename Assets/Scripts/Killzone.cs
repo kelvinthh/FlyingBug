@@ -19,6 +19,8 @@ public class Killzone : MonoBehaviour
 
     //Access the movement script
     private Transform ourBug;
+
+    public GameObject deadtext;
     void Awake()
     {
         ourBug = GameObject.FindGameObjectWithTag("Player").transform;
@@ -55,6 +57,7 @@ public class Killzone : MonoBehaviour
             if (!isPlayed) {
                 audioSource.PlayOneShot(fail, 1f);
                 isPlayed = true;
+                deadtext.SetActive(true);
             }
             slowmo = true;
             Invoke("Restart", 1);

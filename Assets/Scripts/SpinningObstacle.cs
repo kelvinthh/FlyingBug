@@ -27,6 +27,8 @@ public class SpinningObstacle : MonoBehaviour
     [SerializeField]
     private float rotateZ;
 
+    public GameObject deadtext;
+
     void Awake()
     {
         ourBug = GameObject.FindGameObjectWithTag("Player").transform;
@@ -66,6 +68,7 @@ public class SpinningObstacle : MonoBehaviour
             }
             slowmo = true;
             Invoke("Restart", 1);
+            deadtext.SetActive(true);
         }
     }
 

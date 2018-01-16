@@ -43,6 +43,9 @@ public class BugMovementScript : MonoBehaviour
     //Boolean for enabling the slow-motion effect
     private bool slowmo;
 
+    public GameObject FullGUI;
+    public GameObject Warning;
+
     void Awake()
     {
         ourBug = GetComponent<Rigidbody>();
@@ -86,7 +89,7 @@ public class BugMovementScript : MonoBehaviour
         LimitSpeed();
         Swerve();
         Fail();
-
+        ShowFull();
         ourBug.AddRelativeForce(Vector3.up * upForce);
         ourBug.rotation = Quaternion.Euler(new Vector3(tiltAmountForward, currentYRotation, tiltAmountSideways));
 
@@ -95,12 +98,27 @@ public class BugMovementScript : MonoBehaviour
             upForce = -1000f;
             stamina = 0;
         }
-        //if (stamina < maxStamina && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+        //if (stamina < maxStamina && !Input.GetKey(KeyCode.Space) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
         //{
         //    stamina += Time.deltaTime;
         //}
         if (slowmo)
             Time.timeScale = 0.5f;
+    }
+
+    private void ShowFull()
+    {
+        if(stamina >= maxStamina)
+        {
+            FullGUI.SetActive(true);
+            Warning.SetActive(false);
+        }
+        if(stamina < maxStamina)
+        {
+            FullGUI.SetActive(false);
+            if(stamina < maxStamina/2)
+                Warning.SetActive(true);
+        }
     }
 
     void Fail()
@@ -126,7 +144,7 @@ public class BugMovementScript : MonoBehaviour
 
     void MovementUpDown()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.Space))
         {
             if (stamina > 0)
             {
@@ -140,7 +158,7 @@ public class BugMovementScript : MonoBehaviour
             upForce = -200.0f;
         }
 
-        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
+        if (!Input.GetKey(KeyCode.Space) && !Input.GetKey(KeyCode.S))
         {
             //It was positive in the tutorial but I want it to fall when no button is being pressed
             //upForce = -98.1f;
@@ -188,7 +206,7 @@ public class BugMovementScript : MonoBehaviour
     {
         if (stamina > 0)
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
             {
                 //ourBug.velocity = Vector3.ClampMagnitude(ourBug.velocity, bugMaxSpeed);
             }

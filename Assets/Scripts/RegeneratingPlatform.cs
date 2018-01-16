@@ -9,7 +9,7 @@ public class RegeneratingPlatform : MonoBehaviour {
     public AudioClip healing;
     AudioSource audioSource;
     private bool isPlayed;
-
+ 
 
     // Use this for initialization
     void Awake () {
@@ -59,7 +59,7 @@ public class RegeneratingPlatform : MonoBehaviour {
     void Regenerate()
     {
         ourBug.GetComponent<BugMovementScript>().stamina += Time.deltaTime*5; //Time.deltaTime;
-        if (ourBug.GetComponent<BugMovementScript>().stamina > ourBug.GetComponent<BugMovementScript>().maxStamina)
+        if (ourBug.GetComponent<BugMovementScript>().stamina >= ourBug.GetComponent<BugMovementScript>().maxStamina)
         {
             ourBug.GetComponent<BugMovementScript>().stamina = ourBug.GetComponent<BugMovementScript>().maxStamina;
         }

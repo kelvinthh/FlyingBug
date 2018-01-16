@@ -24,6 +24,8 @@ public class MovingObstacle : MonoBehaviour
 
     //Access the movement script
     private Transform ourBug;
+
+    public GameObject deadtext;
     void Awake()
     {
         ourBug = GameObject.FindGameObjectWithTag("Player").transform;
@@ -67,6 +69,7 @@ public class MovingObstacle : MonoBehaviour
             }
             slowmo = true;
             Invoke("Restart", 1);
+            deadtext.SetActive(true);
         }
     }
 

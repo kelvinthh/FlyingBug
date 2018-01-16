@@ -9,6 +9,7 @@ public class Win : MonoBehaviour {
     AudioSource audioSource;
     private AudioSource bgm;
     private bool isPlayed;
+    public GameObject vicText;
 
 	// Use this for initialization
 	void Awake () {
@@ -33,12 +34,13 @@ public class Win : MonoBehaviour {
         {
             audioSource.PlayOneShot(win, 1f);
             isPlayed = true;
+            vicText.SetActive(true);
         }
         Invoke("Restart", 10);
     }
 
     void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(0);
     }
 }
